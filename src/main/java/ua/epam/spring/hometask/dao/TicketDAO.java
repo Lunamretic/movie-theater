@@ -9,9 +9,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class TicketDAO extends AbstractDAO<Ticket> {
+
+    private static AtomicLong idCounter = new AtomicLong();
 
     private static Map<Long, Ticket> ticketMap;
 
@@ -20,6 +23,7 @@ public class TicketDAO extends AbstractDAO<Ticket> {
     }
 
     public Collection<Ticket> addAll(Collection<Ticket> tickets) {
+        tickets.forEach(ticket -> ticket.setId(idCounter.getAndIncrement()));
         tickets.forEach(ticket -> ticketMap.put(ticket.getId(), ticket));
         return tickets;
     }
@@ -34,7 +38,9 @@ public class TicketDAO extends AbstractDAO<Ticket> {
 
     @Override
     public Ticket add(Ticket ticket) {
-        return ticketMap.put(ticket.getId(), ticket);
+        ticket.setId(idCounter.getAndIncrement());
+        ticketMap.put(ticket.getId(), ticket);
+        return ticket;
     }
 
     @Override

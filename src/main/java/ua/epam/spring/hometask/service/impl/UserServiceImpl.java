@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
-public class UserServiceImpl implements AbstractDomainObjectService<User>, UserService {
+public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO;
 
@@ -22,7 +22,7 @@ public class UserServiceImpl implements AbstractDomainObjectService<User>, UserS
     @Nullable
     @Override
     public User getUserByEmail(@Nonnull String email) {
-        return null;
+        return userDAO.findByEmail(email);
     }
 
     @Override

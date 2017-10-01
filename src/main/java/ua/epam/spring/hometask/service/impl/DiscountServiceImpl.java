@@ -1,10 +1,9 @@
 package ua.epam.spring.hometask.service.impl;
 
-import org.springframework.stereotype.Service;
 import ua.epam.spring.hometask.domain.Event;
 import ua.epam.spring.hometask.domain.User;
 import ua.epam.spring.hometask.service.DiscountService;
-import ua.epam.spring.hometask.service.discount.strategies.DiscountStrategy;
+import ua.epam.spring.hometask.service.discount.strategy.DiscountStrategy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,13 +20,13 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public byte getDiscount(@Nullable User user, @Nonnull Event event, @Nonnull LocalDateTime airDateTime, long numberOfTickets) {
-        //List<Byte> discounts = new ArrayList<>();
-        //strategies.forEach(discountStrategy -> discounts.add(discountStrategy.calculateDiscount(user, event, airDateTime, numberOfTickets)));
+    public double getDiscount(@Nullable User user, @Nonnull Event event, @Nonnull LocalDateTime airDateTime,
+                            long numberOfRegularTickets, long numberOfVipTickets, double vipMultiplier) {
         return strategies
                 .stream()
-                .map(discountStrategy -> discountStrategy.calculateDiscount(user, event, airDateTime, numberOfTickets))
-                .max(Integer::compare)
+                .map(discountStrategy -> discountStrategy.calculateDiscount(user, event, airDateTime,
+                        numberOfRegularTickets, numberOfVipTickets, vipMultiplier))
+                .max(Double::compare)
                 .get();
     }
 

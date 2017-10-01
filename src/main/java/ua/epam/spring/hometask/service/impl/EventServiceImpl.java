@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public class EventServiceImpl implements AbstractDomainObjectService<Event>, EventService {
+public class EventServiceImpl implements EventService {
 
     private EventDAO eventDAO;
 

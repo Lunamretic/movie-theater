@@ -7,8 +7,11 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class EventDAO extends AbstractDAO<Event> {
+
+    private static AtomicLong idCounter = new AtomicLong();
 
     private static Map<Long, Event> eventMap;
 
@@ -23,7 +26,9 @@ public class EventDAO extends AbstractDAO<Event> {
 
     @Override
     public Event add(Event event) {
-        return eventMap.put(event.getId(), event);
+        event.setId(idCounter.getAndIncrement());
+        eventMap.put(event.getId(), event);
+        return event;
     }
 
     @Override

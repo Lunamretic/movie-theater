@@ -1,6 +1,5 @@
 package ua.epam.spring.hometask.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import ua.epam.spring.hometask.dao.TicketDAO;
 import ua.epam.spring.hometask.domain.Event;
 import ua.epam.spring.hometask.domain.Ticket;
@@ -16,17 +15,35 @@ import java.util.Set;
 
 public class BookingServiceImpl implements BookingService {
 
-    private static final double VIP_SEAT_MULTIPLIER = 2.0;
+    private double vipSeatMultiplier = 2.0;
 
-    private static final double LOW_RATING_MULTIPLIER = 0.8;
+    private double lowRatingMultiplier = 0.8;
 
-    private static final double HIGH_RATING_MULTIPLIER = 1.2;
+    private double midRatingMultiplier = 1.0;
+
+    private double highRatingMultiplier = 1.2;
 
     private DiscountService discountService;
 
     private UserService userService;
 
     private TicketDAO ticketDAO;
+
+    public void setVipSeatMultiplier(double vipSeatMultiplier) {
+        this.vipSeatMultiplier = vipSeatMultiplier;
+    }
+
+    public void setLowRatingMultiplier(double lowRatingMultiplier) {
+        this.lowRatingMultiplier = lowRatingMultiplier;
+    }
+
+    public void setMidRatingMultiplier(double midRatingMultiplier) {
+        this.midRatingMultiplier = midRatingMultiplier;
+    }
+
+    public void setHighRatingMultiplier(double highRatingMultiplier) {
+        this.highRatingMultiplier = highRatingMultiplier;
+    }
 
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -42,27 +59,31 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public double getTicketsPrice(@Nonnull Event event, @Nonnull LocalDateTime dateTime, @Nullable User user, @Nonnull Set<Long> seats) {
+
         double totalPrice;
 
         long numVipSeats = event.getAuditoriums().get(dateTime).countVipSeats(seats);
         long numRegularSeats = seats.size() - numVipSeats;
-        totalPrice = event.getBasePrice() * (numRegularSeats + numVipSeats * VIP_SEAT_MULTIPLIER);
+        totalPrice = event.getBasePrice() * (numRegularSeats + numVipSeats * vipSeatMultiplier);
 
         switch (event.getRating()) {
             case LOW:
-                totalPrice *= LOW_RATING_MULTIPLIER;
+                totalPrice *= lowRatingMultiplier;
                 break;
             case MID:
+                totalPrice *= midRatingMultiplier;
                 break;
             case HIGH:
-                totalPrice *= HIGH_RATING_MULTIPLIER;
+                totalPrice *= highRatingMultiplier;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown rating for event");
         }
 
-        byte discount = discountService.getDiscount(user, event, dateTime, seats.size());
-        totalPrice *= discount;
+        double discount = discountService.getDiscount(user, event, dateTime,
+                numRegularSeats, numVipSeats, vipSeatMultiplier);
+
+        totalPrice -= totalPrice * discount / 100;
 
         return totalPrice;
     }

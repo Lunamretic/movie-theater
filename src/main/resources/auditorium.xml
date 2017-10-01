@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <context:property-placeholder location="classpath:prop/auditoriums.properties" />
+    <context:property-placeholder location="classpath:prop/auditoriums.properties" ignore-unresolvable="true" />
 
     <util:set id="auditoriums" value-type="ua.epam.spring.hometask.domain.Auditorium">
         <ref bean="auditorium1" />

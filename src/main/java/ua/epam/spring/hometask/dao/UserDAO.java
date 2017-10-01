@@ -9,8 +9,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class UserDAO extends AbstractDAO<User> {
+
+    private static AtomicLong idCounter = new AtomicLong();
 
     private static Map<Long, User> userMap;
 
@@ -29,7 +32,9 @@ public class UserDAO extends AbstractDAO<User> {
 
     @Override
     public User add(User user) {
-        return userMap.put(user.getId(), user);
+        user.setId(idCounter.getAndIncrement());
+        userMap.put(user.getId(), user);
+        return user;
     }
 
     @Override
