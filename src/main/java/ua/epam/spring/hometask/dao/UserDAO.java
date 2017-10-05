@@ -13,43 +13,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class UserDAO extends AbstractDAO<User> {
 
-    private static AtomicLong idCounter = new AtomicLong();
-
-    private static Map<Long, User> userMap;
-
-    static {
-        userMap = new HashMap<>();
-    }
-
     @Nullable
     public User findByEmail(@Nonnull String email) {
-        return userMap.values().stream().filter(user -> user.getEmail().contains(email)).findFirst().orElse(null);
+        return domainObjectMap.values().stream().filter(user -> user.getEmail().contains(email)).findFirst().orElse(null);
     }
 
     public boolean updateTickets(@Nonnull Set<Ticket> tickets, @Nonnull Long id) {
-        return userMap.get(id).getTickets().addAll(tickets);
-    }
-
-    @Override
-    public User add(User user) {
-        user.setId(idCounter.getAndIncrement());
-        userMap.put(user.getId(), user);
-        return user;
-    }
-
-    @Override
-    public void remove(User user) {
-        userMap.remove(user.getId());
-    }
-
-    @Override
-    public User getById(Long id) {
-        return userMap.get(id);
-    }
-
-    @Override
-    public Collection<User> getAll() {
-        return userMap.values();
+        return domainObjectMap.get(id).getTickets().addAll(tickets);
     }
 
 }
