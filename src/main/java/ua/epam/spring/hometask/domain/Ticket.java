@@ -70,10 +70,7 @@ public class Ticket extends DomainObject implements Comparable<Ticket> {
         } else if (!event.equals(other.event)) {
             return false;
         }
-        if (seat != other.seat) {
-            return false;
-        }
-        return true;
+        return seat == other.seat;
     }
 
     @Override

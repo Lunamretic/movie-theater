@@ -1,17 +1,16 @@
 package ua.epam.spring.hometask.dao;
 
+import org.springframework.stereotype.Repository;
 import ua.epam.spring.hometask.domain.Event;
 import ua.epam.spring.hometask.domain.Ticket;
 
 import javax.annotation.Nonnull;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+@Repository
 public class TicketDAO extends AbstractDAO<Ticket> {
 
     public Collection<Ticket> addAll(Collection<Ticket> tickets) {

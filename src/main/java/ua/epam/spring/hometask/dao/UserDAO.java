@@ -1,16 +1,14 @@
 package ua.epam.spring.hometask.dao;
 
+import org.springframework.stereotype.Repository;
 import ua.epam.spring.hometask.domain.Ticket;
 import ua.epam.spring.hometask.domain.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
 public class UserDAO extends AbstractDAO<User> {
 
     @Nullable

@@ -1,9 +1,10 @@
 package ua.epam.spring.hometask.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.epam.spring.hometask.dao.UserDAO;
 import ua.epam.spring.hometask.domain.Ticket;
 import ua.epam.spring.hometask.domain.User;
-import ua.epam.spring.hometask.service.AbstractDomainObjectService;
 import ua.epam.spring.hometask.service.UserService;
 
 import javax.annotation.Nonnull;
@@ -11,13 +12,11 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
+@Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private UserDAO userDAO;
-
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
 
     @Nullable
     @Override

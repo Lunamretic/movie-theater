@@ -1,5 +1,8 @@
 package ua.epam.spring.hometask.service.discount.strategy;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import ua.epam.spring.hometask.domain.Event;
 import ua.epam.spring.hometask.domain.User;
 
@@ -10,9 +13,12 @@ import java.time.LocalDateTime;
 /**
  * Discount for every 10th ticket. Can be applied only to regular tickets.
  */
+@Component
+@PropertySource("classpath:/prop/application.properties")
 public class EveryTenthTicketStrategy implements DiscountStrategy {
 
-    private byte discountValue;
+    @Value("${discount.every-tenth}")
+    private int discountValue;
 
     public void setDiscountValue(byte discountValue) {
         this.discountValue = discountValue;
