@@ -5,6 +5,7 @@ import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.io.ClassPathResource;
 import ua.epam.spring.hometask.domain.Auditorium;
 
@@ -13,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Configuration
+@EnableAspectJAutoProxy
 @ComponentScan("ua.epam.spring.hometask")
 public class AppConfig {
 
