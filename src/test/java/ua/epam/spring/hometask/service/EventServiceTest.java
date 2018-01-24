@@ -13,9 +13,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import ua.epam.spring.hometask.configuration.AppConfig;
+import ua.epam.spring.hometask.configuration.DBConfig;
 import ua.epam.spring.hometask.dao.EventDAO;
 import ua.epam.spring.hometask.domain.Event;
 import ua.epam.spring.hometask.domain.EventRating;
+import ua.epam.spring.hometask.service.impl.EventServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -34,7 +37,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners(listeners = { DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class })
-@ContextConfiguration("classpath:spring.xml")
+@ContextConfiguration(classes = {AppConfig.class, DBConfig.class})
+
 public class EventServiceTest {
 
     @Mock

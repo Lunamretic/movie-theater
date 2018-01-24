@@ -1,19 +1,19 @@
 package ua.epam.spring.hometask.service.impl;
 
+import org.springframework.stereotype.Service;
 import ua.epam.spring.hometask.domain.Auditorium;
 import ua.epam.spring.hometask.service.AuditoriumService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.Resource;
 import java.util.Set;
 
+@Service
 public class AuditoriumServiceImpl implements AuditoriumService {
 
+    @Resource(name = "auditoriums")
     private Set<Auditorium> auditoriums;
-
-    public void setAuditoriums(Set<Auditorium> auditoriums) {
-        this.auditoriums = auditoriums;
-    }
 
     public @Nonnull Set<Auditorium> getAll() {
         return auditoriums;

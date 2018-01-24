@@ -1,5 +1,9 @@
 package ua.epam.spring.hometask.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Service;
 import ua.epam.spring.hometask.dao.TicketDAO;
 import ua.epam.spring.hometask.domain.Event;
 import ua.epam.spring.hometask.domain.Ticket;
@@ -13,49 +17,30 @@ import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Service
+@PropertySource("classpath:/prop/application.properties")
 public class BookingServiceImpl implements BookingService {
 
-    private double vipSeatMultiplier = 2.0;
+    @Value("${multiplier.vip-seat}")
+    private double vipSeatMultiplier;
 
-    private double lowRatingMultiplier = 0.8;
+    @Value("${multiplier.low-rating}")
+    private double lowRatingMultiplier;
 
-    private double midRatingMultiplier = 1.0;
+    @Value("${multiplier.mid-rating}")
+    private double midRatingMultiplier;
 
-    private double highRatingMultiplier = 1.2;
+    @Value("${multiplier.high-rating}")
+    private double highRatingMultiplier;
 
+    @Autowired
     private DiscountService discountService;
 
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private TicketDAO ticketDAO;
-
-    public void setVipSeatMultiplier(double vipSeatMultiplier) {
-        this.vipSeatMultiplier = vipSeatMultiplier;
-    }
-
-    public void setLowRatingMultiplier(double lowRatingMultiplier) {
-        this.lowRatingMultiplier = lowRatingMultiplier;
-    }
-
-    public void setMidRatingMultiplier(double midRatingMultiplier) {
-        this.midRatingMultiplier = midRatingMultiplier;
-    }
-
-    public void setHighRatingMultiplier(double highRatingMultiplier) {
-        this.highRatingMultiplier = highRatingMultiplier;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public void setDiscountService(DiscountService discountService) {
-        this.discountService = discountService;
-    }
-
-    public void setTicketDAO(TicketDAO ticketDAO) {
-        this.ticketDAO = ticketDAO;
-    }
 
     @Override
     public double getTicketsPrice(@Nonnull Event event, @Nonnull LocalDateTime dateTime, @Nullable User user, @Nonnull Set<Long> seats) {
@@ -64,7 +49,13 @@ public class BookingServiceImpl implements BookingService {
 
         long numVipSeats = event.getAuditoriums().get(dateTime).countVipSeats(seats);
         long numRegularSeats = seats.size() - numVipSeats;
+
+        double discount = discountService.getDiscount(user, event, dateTime,
+                numRegularSeats, numVipSeats, vipSeatMultiplier); //vipSeatMultiplier is necessary for calculating the "value" of VIP tickets
+
         totalPrice = event.getBasePrice() * (numRegularSeats + numVipSeats * vipSeatMultiplier);
+
+        totalPrice -= totalPrice * discount / 100;
 
         switch (event.getRating()) {
             case LOW:
@@ -80,11 +71,6 @@ public class BookingServiceImpl implements BookingService {
                 throw new IllegalArgumentException("Unknown rating for event");
         }
 
-        double discount = discountService.getDiscount(user, event, dateTime,
-                numRegularSeats, numVipSeats, vipSeatMultiplier);
-
-        totalPrice -= totalPrice * discount / 100;
-
         return totalPrice;
     }
 
@@ -92,16 +78,16 @@ public class BookingServiceImpl implements BookingService {
     public void bookTickets(@Nonnull Set<Ticket> tickets) {
         ticketDAO.addAll(tickets);
 
-        User user = tickets.iterator().next().getUser();
-        if (user != null) {
-            userService.updateUserTickets(tickets, user.getId());
+        Long userId = tickets.iterator().next().getUserId();
+        if (userId != null) {
+            //FIXME userService.updateUserTickets(tickets, userId);
         }
     }
 
     @Nonnull
     @Override
-    public Set<Ticket> getPurchasedTicketsForEvent(@Nonnull Event event, @Nonnull LocalDateTime dateTime) {
-        return ticketDAO.getTicketsForEvent(event, dateTime);
+    public Set<Ticket> getPurchasedTicketsForEvent(@Nonnull Long eventId, @Nonnull LocalDateTime dateTime) {
+        return ticketDAO.getTicketsForEvent(eventId, dateTime);
     }
 
 }

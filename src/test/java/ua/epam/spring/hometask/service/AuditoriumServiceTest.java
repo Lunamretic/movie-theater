@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import ua.epam.spring.hometask.configuration.AppConfig;
+import ua.epam.spring.hometask.configuration.DBConfig;
 import ua.epam.spring.hometask.domain.Auditorium;
 
 import java.util.Set;
@@ -23,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners(listeners = { DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class })
-@ContextConfiguration("classpath:spring.xml")
+@ContextConfiguration(classes = {AppConfig.class, DBConfig.class})
 public class AuditoriumServiceTest {
 
     private static final Auditorium TEST_AUDITORIUM;

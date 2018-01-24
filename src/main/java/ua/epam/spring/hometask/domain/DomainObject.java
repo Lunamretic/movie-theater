@@ -1,9 +1,11 @@
 package ua.epam.spring.hometask.domain;
 
+import java.io.Serializable;
+
 /**
  * @author Yuriy_Tkach
  */
-public class DomainObject {
+public class DomainObject implements Serializable {
 
     private Long id;
 
