@@ -10,6 +10,8 @@ import ua.epam.spring.hometask.domain.Ticket;
 import javax.annotation.Nonnull;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -56,7 +58,8 @@ public class TicketDAO extends AbstractDAO<Ticket> {
             ticket.setId((Long)row.get("id"));
             ticket.setUserId((Long)row.get("userId"));
             ticket.setEventId((Long)row.get("eventId"));
-            ticket.setDateTime((LocalDateTime)row.get("dateTime"));
+            Timestamp timestamp = (Timestamp)row.get("dateTime");
+            ticket.setDateTime(timestamp.toLocalDateTime());
             ticket.setSeat((Long)row.get("seat"));
             tickets.add(ticket);
         }
@@ -78,9 +81,10 @@ public class TicketDAO extends AbstractDAO<Ticket> {
         for (Map row : rows) {
             Ticket ticket = new Ticket();
             ticket.setId((Long)row.get("id"));
-            ticket.setUserId((Long)row.get("userId"));
-            ticket.setEventId((Long)row.get("eventId"));
-            ticket.setDateTime((LocalDateTime)row.get("dateTime"));
+            ticket.setUserId((Long)row.get("user_id"));
+            ticket.setEventId((Long)row.get("event_id"));
+            Timestamp timestamp = (Timestamp)row.get("dateTime");
+            ticket.setDateTime(timestamp.toLocalDateTime());
             ticket.setSeat((Long)row.get("seat"));
             tickets.add(ticket);
         }
